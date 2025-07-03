@@ -42,8 +42,6 @@ I got this error when running the command, you can reload the Client project to 
 
 The server name of the connection string needs to match your SQL Server's instance name.
 
-![alt text](assets/image2.png)
-
 DefaultProject: ServerLibrary
 
 ```bash
@@ -52,8 +50,15 @@ Add-Migration AddRoles
 Update-Database
 ```
 
+```bash
+Add-Migration TokenInfo
+
+Update-Database
+```
 
 ## Generate Jwt key
+
+![alt text](assets/image2.png)
 
 1. `openssl rand -base64 32`
 

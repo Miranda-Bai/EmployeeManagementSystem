@@ -5,10 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+	<ItemGroup>
+		<PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="8.0.17" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.6" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.12.1" />
+	</ItemGroup>
   <ItemGroup>
-    <Folder Include="Services\Contracts\" />
-    <Folder Include="Services\Implementations\" />
+    <ProjectReference Include="..\BaseLibrary\BaseLibrary.csproj" />
   </ItemGroup>
 
 </Project>
