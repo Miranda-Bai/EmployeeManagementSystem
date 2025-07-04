@@ -1,12 +1,25 @@
 ﻿@page "/identity/account/register"
+@using Client.Pages.OtherPages
+@layout AuthenticationLayout
+
 <div class="container">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-lg-4">
+        </div>
+        <div class="col-lg-4">
             <EditForm Enhance Model="User" OnValidSubmit="HandleRegistration">
                 <DataAnnotationsValidator />
-                <ValidationSummary />
-                <div class="card">
-                    <div class="card-header">Fill this form to Register</div>
+                <div class="card bg-dark d-flex justify-content-center" style="opacity:0.5; margin-top:20%; border-radius:10px; color:white; font-weight:bold">
+                    <div class="card-header text-center fs-5">Register an account</div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 d-flex justify-content-center">
+                                <img style="border-radius:20px" src="./images/logos/home-logo.svg" height="50" width="50" />
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4"></div>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="form-group">
                             <label class="form-label">Full Name</label>
@@ -25,21 +38,40 @@
                             <input type="password" @bind="User.ConfirmPassword" class="form-control"></input>
                         </div>
                         <div class="form-group mt-3">
-                            <button type="submit" class="btn btn-outline-primary float-end">Register</button>
+                            @if (ShowLoadingButton)
+                            {
+                                <ButtonLoadingSpinner></ButtonLoadingSpinner>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary float-end" type="submit">Register</button>
+                            }
                         </div>
+                    </div>
+                    <div class="card-footer">
+                        <span class="text-center">
+                            Already had an account? |
+                            <a class="btn-link" href="identity/account/login">LogIn</a>
+                        </span>
+                        <ValidationSummary />
                     </div>
                 </div>
             </EditForm>
+        </div>
+        <div class="col-lg-4">  
         </div>
     </div>
 </div>
 
 @code {
+    public bool ShowLoadingButton { get; set; } = false;
+
     Register User = new();
 
 
     async Task HandleRegistration()
     {
+        ShowLoadingButton = true;
         var result = await accountService.CreateAsync(User);
         if (result.Flag)
         {
@@ -49,6 +81,7 @@
         {
 
         }
+        ShowLoadingButton = false;
     }
 
 
