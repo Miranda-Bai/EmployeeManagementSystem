@@ -1,6 +1,7 @@
 ﻿@page "/identity/account/login"
 @using Client.Pages.OtherPages
 @layout AuthenticationLayout
+@inject SfDialogService DialogService
 
 <div class="container">
     <div class="row">
@@ -59,18 +60,42 @@
     public bool ShowLoadingButton { get; set; } = false;
 
     Login User = new();
+
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await CheckUserAuthentication();
+    }
+
     async Task HandleLogin()
     {
         ShowLoadingButton = true;
         var result = await accountService.SigninAsync(User);
         if (result.Flag)
         {
+            await DisplayDialog(result.Message, "Login Success");
             var customAuthStateProvider = (CustomAuthenticationStateProvider)AuthStateProvider;
             await customAuthStateProvider.UpdateAuthenticationState(new UserSession()
             { Token = result.Token, RefreshToken = result.RefreshToken });
             NavManager.NavigateTo("/", forceLoad: true);
         }
+        else
+        {
+            await DisplayDialog(result.Message, "Alert");
+        }
         ShowLoadingButton = false;
     }
 
+    private async Task DisplayDialog(string content, string title)
+    {
+        await DialogService.AlertAsync(content, title);
+    }
+
+    private async Task CheckUserAuthentication()
+    {
+        var user = (await AuthenticationState).User;
+        bool isUserAuthenticated = user.Identity!.IsAuthenticated;
+        if (!isUserAuthenticated)
+            NavManager.NavigateTo("/identity/account/login");
+    }
 }
